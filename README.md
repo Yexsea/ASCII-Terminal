@@ -11,13 +11,7 @@ Pick a file and watch it rendered with text characters, frame by frame, scaled t
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=flat-square&logo=windows&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=linux&logoColor=black)
 
-<!-- DEMO-BASLANGIC  (video eklerken bu satırı ve aşağıdaki DEMO-BITIS satırını sil)
-## ▶ Demo
-
-VIDEO_LINKI_BURAYA
-
-*Frames produced by the project's own conversion function, with the original sound; the window is resized mid-playback. Demo film: [Big Buck Bunny](https://peach.blender.org/) (CC BY 3.0, © Blender Foundation).*
-DEMO-BITIS -->
+https://github.com/user-attachments/assets/7c0f95ea-32ad-43af-82a3-1ea07862586e
 
 ---
 
