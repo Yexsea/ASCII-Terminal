@@ -1,2 +1,2 @@
 bash kurulum.sh
-bash başlat.sh
+bash baslat.sh

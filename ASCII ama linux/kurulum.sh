@@ -1,45 +1,42 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Ubuntu/Debian tabanlı sistemler için kurulum
-
-PYTHON_VERSION="3.11.8"
+set -e
+cd "$(dirname "$0")"
 
 echo "Sistem gereksinimleri kontrol ediliyor..."
 
-# Tam olarak 3.11.8 var mı kontrol et
-if command -v python3.11 &> /dev/null && python3.11 --version 2>&1 | grep -q "$PYTHON_VERSION"; then
-    echo "Harika, Python $PYTHON_VERSION sisteminde zaten kurulu!"
-else
-    echo "Python $PYTHON_VERSION tam olarak bulunamadı."
-    echo "Baştan indirip kaynak kodundan derliyorum (Bu işlem bilgisayarının hızına göre birkaç dakika sürebilir)..."
-    
+# Python 3.8 veya üstü yeterli; sistemde yoksa paket yöneticisiyle kurulur
+if ! command -v python3 >/dev/null 2>&1; then
+    echo "Python 3 bulunamadı, kuruluyor..."
     sudo apt-get update
-    sudo apt-get install -y wget build-essential libncursesw5-dev libssl-dev \
-        libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
+    sudo apt-get install -y python3
+fi
 
-    wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz
-    tar -xf Python-$PYTHON_VERSION.tgz
-    cd Python-$PYTHON_VERSION
-    
-    ./configure --enable-optimizations
-    sudo make altinstall
-    
-    cd ..
-    rm -rf Python-$PYTHON_VERSION Python-$PYTHON_VERSION.tgz
-    echo "Python $PYTHON_VERSION başarıyla kuruldu!"
+if ! python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 8) else 1)'; then
+    echo "Python 3.8 veya üstü gerekli. Sistemdeki sürüm: $(python3 --version)"
+    exit 1
+fi
+echo "Harika, $(python3 --version) kullanılacak."
+
+# Sanal ortam modülü bazı dağıtımlarda ayrı paket olarak geliyor
+if ! python3 -c 'import ensurepip' >/dev/null 2>&1; then
+    echo "venv modülü eksik, kuruluyor..."
+    sudo apt-get update
+    sudo apt-get install -y python3-venv
 fi
 
 echo "Sanal ortam (venv) oluşturuluyor..."
-python3.11 -m venv venv
-source venv/bin/activate
+python3 -m venv venv
 
 echo "Gerekli kütüphaneler kuruluyor..."
-pip install --upgrade pip
-pip install opencv-python pygame imageio-ffmpeg
+./venv/bin/python -m pip install --upgrade pip
+# Görüntü terminale çizildiği için pencere desteği olmayan (headless) OpenCV yeterli
+./venv/bin/python -m pip install opencv-python-headless pygame imageio-ffmpeg
 
 mkdir -p Medya
 
 echo "------------------------------------------------------"
 echo "Kurulum tamamlandı!"
 echo "Lütfen 'Medya' klasörüne videolarını veya fotoğraflarını ekle."
-echo "Ardından './baslat.sh' komutuyla programı çalıştırabilirsin."
+echo "Ardından 'bash baslat.sh' komutuyla programı çalıştırabilirsin."
 echo "------------------------------------------------------"
